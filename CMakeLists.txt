@@ -15,7 +15,7 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
 
 add_executable(AkshayaMart
-    src/main.cpp
+    src/main.cpp4
 )
 
 target_link_libraries(AkshayaMart

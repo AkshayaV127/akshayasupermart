@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Orders - AkshayaMart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 40px 50px;
+        }
+
+        .order {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .order h2 {
+            margin-top: 0;
+        }
+
+        .order p {
+            color: #555;
+            margin: 8px 0;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">AkshayaMart - Admin</div>
+
+        <a class="back" href="admin-dashboard.html">
+            Dashboard
+        </a>
+
+    </div>
+
+    <div class="container">
+
+        <h1>Manage Orders</h1>
+
+        <div class="order">
+
+            <h2>Order #AKM1001</h2>
+
+            <p><strong>Customer:</strong> Akshaya</p>
+            <p><strong>Product:</strong> Women's Dress</p>
+            <p><strong>Quantity:</strong> 2</p>
+            <p><strong>Amount:</strong> ₹998</p>
+            <p><strong>Payment:</strong> Cash on Delivery</p>
+            <p><strong>Status:</strong> Order Placed</p>
+
+            <button>Update Order</button>
+
+        </div>
+
+        <div class="order">
+
+            <h2>Order #AKM1002</h2>
+
+            <p><strong>Customer:</strong> Priya</p>
+            <p><strong>Product:</strong> Smart Watch</p>
+            <p><strong>Quantity:</strong> 1</p>
+            <p><strong>Amount:</strong> ₹999</p>
+            <p><strong>Payment:</strong> UPI</p>
+            <p><strong>Status:</strong> Delivered</p>
+
+            <button>Update Order</button>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

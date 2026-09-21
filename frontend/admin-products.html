@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Products - AkshayaMart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 40px 50px;
+        }
+
+        .product {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .product h2 {
+            margin-top: 0;
+        }
+
+        .product p {
+            color: #555;
+            margin: 8px 0;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            margin-top: 12px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">AkshayaMart - Admin</div>
+
+        <a class="back" href="admin-dashboard.html">
+            Dashboard
+        </a>
+
+    </div>
+
+    <div class="container">
+
+        <h1>Manage Products</h1>
+
+        <div class="product">
+
+            <h2>Women's Dress</h2>
+
+            <p><strong>Seller:</strong> Priya</p>
+            <p><strong>Category:</strong> Fashion</p>
+            <p><strong>Price:</strong> ₹499</p>
+            <p><strong>Quantity:</strong> 20</p>
+            <p><strong>Status:</strong> Active</p>
+
+            <button>Approve</button>
+            <button>Remove</button>
+
+        </div>
+
+        <div class="product">
+
+            <h2>Smart Watch</h2>
+
+            <p><strong>Seller:</strong> Priya</p>
+            <p><strong>Category:</strong> Electronics</p>
+            <p><strong>Price:</strong> ₹999</p>
+            <p><strong>Quantity:</strong> 15</p>
+            <p><strong>Status:</strong> Active</p>
+
+            <button>Approve</button>
+            <button>Remove</button>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

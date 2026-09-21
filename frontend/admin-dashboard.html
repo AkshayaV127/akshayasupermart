@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - AkshayaMart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .logout {
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 40px 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 240px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 11px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">AkshayaMart - Admin</div>
+
+        <a class="logout" href="login.html">
+            Logout
+        </a>
+
+    </div>
+
+    <div class="container">
+
+        <h1>Admin Dashboard</h1>
+
+        <div class="cards">
+
+            <div class="card">
+                <h2>Users</h2>
+                <p>View registered buyers and sellers.</p>
+                <a class="btn" href="admin-users.html">
+                    Manage Users
+                </a>
+            </div>
+
+            <div class="card">
+                <h2>Orders</h2>
+                <p>View and manage customer orders.</p>
+                <a class="btn" href="admin-orders.html">
+                    Manage Orders
+                </a>
+            </div>
+
+            <div class="card">
+                <h2>Products</h2>
+                <p>Review and moderate product listings.</p>
+                <a class="btn" href="admin-products.html">
+                    Manage Products
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
