@@ -52,7 +52,8 @@ string getProducts(sqlite3 *db)
 
 string loginUser(sqlite3 *db, string email, string password)
 {
-    string result = "{\"status\":\"failed\",\"message\":\"Invalid email or password\"}";
+    string result =
+        "{\"status\":\"failed\",\"message\":\"Invalid email or password\"}";
 
     const char *sql =
         "SELECT id, name, role FROM users WHERE email=? AND password=?";
@@ -114,6 +115,8 @@ int main()
         return 1;
     }
 
+    cout << "Winsock started successfully!" << endl;
+
     SOCKET serverSocket =
         socket(AF_INET, SOCK_STREAM, 0);
 
@@ -124,6 +127,8 @@ int main()
         sqlite3_close(db);
         return 1;
     }
+
+    cout << "Socket created successfully!" << endl;
 
     BOOL option = TRUE;
 
@@ -141,26 +146,40 @@ int main()
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(8080);
 
+    cout << "Trying to bind port 8080..." << endl;
+
     if (bind(
             serverSocket,
             (sockaddr *)&serverAddress,
             sizeof(serverAddress)) == SOCKET_ERROR)
     {
         cout << "Bind failed!" << endl;
+        cout << "Error code: " << WSAGetLastError() << endl;
+
         closesocket(serverSocket);
         WSACleanup();
         sqlite3_close(db);
+
         return 1;
     }
+
+    cout << "Bind successful!" << endl;
+
+    cout << "Trying to listen on port 8080..." << endl;
 
     if (listen(serverSocket, 5) == SOCKET_ERROR)
     {
         cout << "Listen failed!" << endl;
+        cout << "Error code: " << WSAGetLastError() << endl;
+
         closesocket(serverSocket);
         WSACleanup();
         sqlite3_close(db);
+
         return 1;
     }
+
+    cout << "Listen successful!" << endl;
 
     cout << "AkshayaMart backend server started!" << endl;
     cout << "Products API: http://localhost:8080/api/products" << endl;
@@ -172,7 +191,10 @@ int main()
             accept(serverSocket, nullptr, nullptr);
 
         if (clientSocket == INVALID_SOCKET)
+        {
+            cout << "Accept failed!" << endl;
             continue;
+        }
 
         char buffer[4096] = {0};
 
