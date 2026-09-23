@@ -29,10 +29,18 @@ string getProducts(sqlite3 *db)
         first = false;
 
         int id = sqlite3_column_int(stmt, 0);
-        const unsigned char *name = sqlite3_column_text(stmt, 1);
-        const unsigned char *category = sqlite3_column_text(stmt, 2);
-        double price = sqlite3_column_double(stmt, 3);
-        int quantity = sqlite3_column_int(stmt, 4);
+
+        const unsigned char *name =
+            sqlite3_column_text(stmt, 1);
+
+        const unsigned char *category =
+            sqlite3_column_text(stmt, 2);
+
+        double price =
+            sqlite3_column_double(stmt, 3);
+
+        int quantity =
+            sqlite3_column_int(stmt, 4);
 
         json += "{";
         json += "\"id\":" + to_string(id) + ",";
@@ -68,7 +76,8 @@ string loginUser(sqlite3 *db, string email, string password)
 
     if (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        int id = sqlite3_column_int(stmt, 0);
+        int id =
+            sqlite3_column_int(stmt, 0);
 
         const unsigned char *nameText =
             sqlite3_column_text(stmt, 1);
@@ -94,6 +103,87 @@ string loginUser(sqlite3 *db, string email, string password)
     return result;
 }
 
+string registerUser(
+    sqlite3 *db,
+    string name,
+    string email,
+    string password,
+    string role)
+{
+    const char *sql =
+        "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return "{\"status\":\"failed\",\"message\":\"Database error\"}";
+
+    sqlite3_bind_text(
+        stmt,
+        1,
+        name.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+    );
+
+    sqlite3_bind_text(
+        stmt,
+        2,
+        email.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+    );
+
+    sqlite3_bind_text(
+        stmt,
+        3,
+        password.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+    );
+
+    sqlite3_bind_text(
+        stmt,
+        4,
+        role.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+    );
+
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        sqlite3_finalize(stmt);
+
+        return "{\"status\":\"failed\",\"message\":\"Email already exists\"}";
+    }
+
+    sqlite3_finalize(stmt);
+
+    return "{\"status\":\"success\",\"message\":\"Registration successful\"}";
+}
+
+string getFormValue(string body, string key)
+{
+    string searchKey = key + "=";
+
+    size_t position =
+        body.find(searchKey);
+
+    if (position == string::npos)
+        return "";
+
+    size_t start =
+        position + searchKey.length();
+
+    size_t end =
+        body.find("&", start);
+
+    if (end == string::npos)
+        end = body.length();
+
+    return body.substr(start, end - start);
+}
+
 int main()
 {
     sqlite3 *db;
@@ -111,7 +201,9 @@ int main()
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
     {
         cout << "Winsock startup failed!" << endl;
+
         sqlite3_close(db);
+
         return 1;
     }
 
@@ -123,8 +215,10 @@ int main()
     if (serverSocket == INVALID_SOCKET)
     {
         cout << "Socket creation failed!" << endl;
+
         WSACleanup();
         sqlite3_close(db);
+
         return 1;
     }
 
@@ -142,9 +236,14 @@ int main()
 
     sockaddr_in serverAddress{};
 
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_addr.s_addr = INADDR_ANY;
-    serverAddress.sin_port = htons(8080);
+    serverAddress.sin_family =
+        AF_INET;
+
+    serverAddress.sin_addr.s_addr =
+        INADDR_ANY;
+
+    serverAddress.sin_port =
+        htons(8080);
 
     cout << "Trying to bind port 8080..." << endl;
 
@@ -154,10 +253,15 @@ int main()
             sizeof(serverAddress)) == SOCKET_ERROR)
     {
         cout << "Bind failed!" << endl;
-        cout << "Error code: " << WSAGetLastError() << endl;
+
+        cout << "Error code: "
+             << WSAGetLastError()
+             << endl;
 
         closesocket(serverSocket);
+
         WSACleanup();
+
         sqlite3_close(db);
 
         return 1;
@@ -170,10 +274,15 @@ int main()
     if (listen(serverSocket, 5) == SOCKET_ERROR)
     {
         cout << "Listen failed!" << endl;
-        cout << "Error code: " << WSAGetLastError() << endl;
+
+        cout << "Error code: "
+             << WSAGetLastError()
+             << endl;
 
         closesocket(serverSocket);
+
         WSACleanup();
+
         sqlite3_close(db);
 
         return 1;
@@ -182,13 +291,21 @@ int main()
     cout << "Listen successful!" << endl;
 
     cout << "AkshayaMart backend server started!" << endl;
+
     cout << "Products API: http://localhost:8080/api/products" << endl;
+
     cout << "Login API: http://localhost:8080/api/login" << endl;
+
+    cout << "Register API: http://localhost:8080/api/register" << endl;
 
     while (true)
     {
         SOCKET clientSocket =
-            accept(serverSocket, nullptr, nullptr);
+            accept(
+                serverSocket,
+                nullptr,
+                nullptr
+            );
 
         if (clientSocket == INVALID_SOCKET)
         {
@@ -199,7 +316,12 @@ int main()
         char buffer[4096] = {0};
 
         int received =
-            recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+            recv(
+                clientSocket,
+                buffer,
+                sizeof(buffer) - 1,
+                0
+            );
 
         if (received <= 0)
         {
@@ -213,7 +335,8 @@ int main()
 
         if (request.find("GET /api/products") != string::npos)
         {
-            string products = getProducts(db);
+            string products =
+                getProducts(db);
 
             response =
                 "HTTP/1.1 200 OK\r\n"
@@ -231,40 +354,68 @@ int main()
             string body;
 
             if (bodyPosition != string::npos)
-                body = request.substr(bodyPosition + 4);
-
-            string email = "";
-            string password = "";
-
-            size_t emailPosition =
-                body.find("email=");
-
-            size_t passwordPosition =
-                body.find("password=");
-
-            if (emailPosition != string::npos)
-            {
-                size_t end =
-                    body.find("&", emailPosition);
-
-                if (end == string::npos)
-                    end = body.length();
-
-                email =
-                    body.substr(
-                        emailPosition + 6,
-                        end - (emailPosition + 6)
+                body =
+                    request.substr(
+                        bodyPosition + 4
                     );
-            }
 
-            if (passwordPosition != string::npos)
-            {
-                password =
-                    body.substr(passwordPosition + 9);
-            }
+            string email =
+                getFormValue(body, "email");
+
+            string password =
+                getFormValue(body, "password");
 
             string result =
-                loginUser(db, email, password);
+                loginUser(
+                    db,
+                    email,
+                    password
+                );
+
+            response =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/json\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "Connection: close\r\n"
+                "\r\n" +
+                result;
+        }
+        else if (request.find("POST /api/register") != string::npos)
+        {
+            size_t bodyPosition =
+                request.find("\r\n\r\n");
+
+            string body;
+
+            if (bodyPosition != string::npos)
+                body =
+                    request.substr(
+                        bodyPosition + 4
+                    );
+
+            string name =
+                getFormValue(body, "name");
+
+            string email =
+                getFormValue(body, "email");
+
+            string password =
+                getFormValue(body, "password");
+
+            string role =
+                getFormValue(body, "role");
+
+            if (role.empty())
+                role = "buyer";
+
+            string result =
+                registerUser(
+                    db,
+                    name,
+                    email,
+                    password,
+                    role
+                );
 
             response =
                 "HTTP/1.1 200 OK\r\n"
@@ -299,7 +450,9 @@ int main()
     }
 
     closesocket(serverSocket);
+
     WSACleanup();
+
     sqlite3_close(db);
 
     return 0;
