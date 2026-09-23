@@ -254,6 +254,108 @@ string addProduct(
     return "{\"status\":\"success\",\"message\":\"Product added successfully\"}";
 }
 
+string updateProduct(
+    sqlite3 *db,
+    string id,
+    string name,
+    string category,
+    string price,
+    string quantity)
+{
+    const char *sql =
+        "UPDATE products "
+        "SET name=?, category=?, price=?, quantity=? "
+        "WHERE id=?";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(
+            db,
+            sql,
+            -1,
+            &stmt,
+            nullptr) != SQLITE_OK)
+    {
+        return "{\"status\":\"failed\",\"message\":\"Database error\"}";
+    }
+
+    sqlite3_bind_text(
+        stmt,
+        1,
+        name.c_str(),
+        -1,
+        SQLITE_TRANSIENT);
+
+    sqlite3_bind_text(
+        stmt,
+        2,
+        category.c_str(),
+        -1,
+        SQLITE_TRANSIENT);
+
+    sqlite3_bind_double(
+        stmt,
+        3,
+        stod(price));
+
+    sqlite3_bind_int(
+        stmt,
+        4,
+        stoi(quantity));
+
+    sqlite3_bind_int(
+        stmt,
+        5,
+        stoi(id));
+
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        sqlite3_finalize(stmt);
+
+        return "{\"status\":\"failed\",\"message\":\"Product could not be updated\"}";
+    }
+
+    sqlite3_finalize(stmt);
+
+    return "{\"status\":\"success\",\"message\":\"Product updated successfully\"}";
+}
+
+string deleteProduct(
+    sqlite3 *db,
+    string id)
+{
+    const char *sql =
+        "DELETE FROM products WHERE id=?";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(
+            db,
+            sql,
+            -1,
+            &stmt,
+            nullptr) != SQLITE_OK)
+    {
+        return "{\"status\":\"failed\",\"message\":\"Database error\"}";
+    }
+
+    sqlite3_bind_int(
+        stmt,
+        1,
+        stoi(id));
+
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        sqlite3_finalize(stmt);
+
+        return "{\"status\":\"failed\",\"message\":\"Product could not be deleted\"}";
+    }
+
+    sqlite3_finalize(stmt);
+
+    return "{\"status\":\"success\",\"message\":\"Product deleted successfully\"}";
+}
+
 string getFormValue(
     string body,
     string key)
@@ -400,6 +502,10 @@ int main()
     cout << "Register API: http://localhost:8080/api/register" << endl;
 
     cout << "Add Product API: http://localhost:8080/api/products/add" << endl;
+
+    cout << "Update Product API: http://localhost:8080/api/products/update" << endl;
+
+    cout << "Delete Product API: http://localhost:8080/api/products/delete" << endl;
 
     while (true)
     {
@@ -595,6 +701,98 @@ int main()
                     price,
                     quantity,
                     sellerId);
+
+            response =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/json\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "Connection: close\r\n"
+                "\r\n" +
+                result;
+        }
+
+        else if (request.find(
+                     "POST /api/products/update") != string::npos)
+        {
+            size_t bodyPosition =
+                request.find("\r\n\r\n");
+
+            string body;
+
+            if (bodyPosition != string::npos)
+            {
+                body =
+                    request.substr(
+                        bodyPosition + 4);
+            }
+
+            string id =
+                getFormValue(
+                    body,
+                    "id");
+
+            string name =
+                getFormValue(
+                    body,
+                    "name");
+
+            string category =
+                getFormValue(
+                    body,
+                    "category");
+
+            string price =
+                getFormValue(
+                    body,
+                    "price");
+
+            string quantity =
+                getFormValue(
+                    body,
+                    "quantity");
+
+            string result =
+                updateProduct(
+                    db,
+                    id,
+                    name,
+                    category,
+                    price,
+                    quantity);
+
+            response =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/json\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "Connection: close\r\n"
+                "\r\n" +
+                result;
+        }
+
+        else if (request.find(
+                     "POST /api/products/delete") != string::npos)
+        {
+            size_t bodyPosition =
+                request.find("\r\n\r\n");
+
+            string body;
+
+            if (bodyPosition != string::npos)
+            {
+                body =
+                    request.substr(
+                        bodyPosition + 4);
+            }
+
+            string id =
+                getFormValue(
+                    body,
+                    "id");
+
+            string result =
+                deleteProduct(
+                    db,
+                    id);
 
             response =
                 "HTTP/1.1 200 OK\r\n"
